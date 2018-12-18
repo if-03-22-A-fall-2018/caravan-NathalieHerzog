@@ -11,6 +11,18 @@
  *-----------------------------------------------------------------------------
 */
 #include "caravan.h"
+#include <stdio.h>
+
+struct CaravanImplementation
+{
+  int length;
+};
+
+struct Node
+{
+  int data;
+  struct Node* next;
+};
 
 Caravan new_caravan()
 {
@@ -19,15 +31,22 @@ Caravan new_caravan()
 
 int get_length(Caravan caravan)
 {
-  return 0;
+  return caravan->length;
 }
 
 void delete_caravan(Caravan caravan)
 {
+  caravan = 0;
 }
 
 void add_pack_animal(Caravan caravan, PackAnimal animal)
 {
+  struct Node* node = (struct Node*) malloc(sizeof(struct Node));
+
+  node->data = 39;
+  tail->next = node;
+  node->next = 0;
+  tail = node;
 }
 
 void remove_pack_animal(Caravan caravan, PackAnimal animal)

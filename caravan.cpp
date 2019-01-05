@@ -41,25 +41,29 @@ void delete_caravan(Caravan caravan)
 
 void add_pack_animal(Caravan caravan, PackAnimal animal)
 {
-  struct Node *current = (struct Node *)malloc(sizeof(struct Node));
-
-  current = head;
-
-  while (current->next != NULL)
+  if (head != NULL)
   {
-    current = current->next;
+    struct Node *current = (struct Node *)malloc(sizeof(struct Node));
+
+    current = head;
+
+    while (current->next != NULL)
+    {
+      current = current->next;
+    }
+
+    current->next = (struct Node *)malloc(sizeof(struct Node));
+    current->next->data = animal;
+
+    caravan->length++;
+    caravan->loadC += animal->load;
+    animal->caravan = caravan;
   }
-
-  current->next = (struct Node *)malloc(sizeof(struct Node));
-  current->next->data = animal;
-
-  caravan->length++;
-  caravan->loadC += animal->load;
 }
 
 void remove_pack_animal(Caravan caravan, PackAnimal animal)
 {
-  if (head != 0)
+  if (head != NULL)
   {
     struct Node *current = (struct Node *)malloc(sizeof(struct Node));
     struct Node *temp;

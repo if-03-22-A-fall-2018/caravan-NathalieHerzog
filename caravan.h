@@ -15,13 +15,21 @@
 
 #include "pack_animal.h"
 
-/*typedef struct node {
-    int val;
-    struct node* next;
-}node_t;*/
+struct CaravanImplementation
+{
+    int length;
+    int loadC;
+    bool empty;
+};
+
+struct Node
+{
+    PackAnimal data;
+    struct Node *next;
+};
 
 /**
-* Initialisiert eine Karawane. D. h., dass es alle in der Karawane befindlichen Tiere aus der
+* Initialisiert eine Karawane. D. h., dass es werden alle in der Karawane befindlichen Tiere aus der
 * Karawane entfernt und die Karawane als leer kennzeichnet.
 * @param caravan Die Karawane, welche initialisiert werden soll.
 */
@@ -33,7 +41,7 @@ Caravan new_caravan();
 int get_length(Caravan caravan);
 
 /**
-* Entfern alle Tiere aus einer Karawane und löscht die Karawane.
+* Entfernt alle Tiere aus einer Karawane und löscht die Karawane.
 */
 void delete_caravan(Caravan caravan);
 
@@ -59,7 +67,7 @@ int get_caravan_speed(Caravan caravan);
 int get_caravan_load(Caravan caravan);
 
 /**
-* Entl&auml;dt die gesamte Karawane. D.h. es wird jedes Tier in der Karawane von seinen Ballen
+* Entlädt die gesamte Karawane. D.h. es wird jedes Tier in der Karawane von seinen Ballen
 * befreit.
 */
 void unload(Caravan caravan);

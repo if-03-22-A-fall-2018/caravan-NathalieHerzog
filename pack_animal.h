@@ -19,6 +19,14 @@ typedef enum {Camel, Horse} AnimalType;
 
 typedef struct PackAnimalImplementation* PackAnimal;
 
+struct PackAnimalImplementation {
+	AnimalType type;
+	const char *name;
+	int max_speed;
+	int load;
+	Caravan caravan;
+};
+
 /**
 * Erzeugt ein Kamel
 * @param name Name des Kamels

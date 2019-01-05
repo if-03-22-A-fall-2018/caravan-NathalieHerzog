@@ -10,23 +10,23 @@
  * <your description here>
  *-----------------------------------------------------------------------------
 */
+
 #include "caravan.h"
+#include "pack_animal.h"
+#include <stdlib.h>
 #include <stdio.h>
 
-struct CaravanImplementation
-{
-  int length;
-};
-
-struct Node
-{
-  int data;
-  struct Node* next;
-};
+struct Node *head;
 
 Caravan new_caravan()
 {
-  return 0;
+  Caravan caravan = (Caravan)malloc(sizeof(caravan));
+
+  caravan->length = 0;
+  caravan->loadC = 0;
+  caravan->empty = true;
+
+  return caravan;
 }
 
 int get_length(Caravan caravan)
@@ -36,33 +36,94 @@ int get_length(Caravan caravan)
 
 void delete_caravan(Caravan caravan)
 {
-  caravan = 0;
+  free(caravan);
 }
 
 void add_pack_animal(Caravan caravan, PackAnimal animal)
 {
-  struct Node* node = (struct Node*) malloc(sizeof(struct Node));
+  struct Node *current = (struct Node *)malloc(sizeof(struct Node));
 
-  node->data = 39;
-  tail->next = node;
-  node->next = 0;
-  tail = node;
+  current = head;
+
+  while (current->next != NULL)
+  {
+    current = current->next;
+  }
+
+  current->next = (struct Node *)malloc(sizeof(struct Node));
+  current->next->data = animal;
+
+  caravan->length++;
+  caravan->loadC += animal->load;
 }
 
 void remove_pack_animal(Caravan caravan, PackAnimal animal)
 {
+  if (head != 0)
+  {
+    struct Node *current = (struct Node *)malloc(sizeof(struct Node));
+    struct Node *temp;
+
+    current = head;
+
+    while (current != NULL)
+    {
+      if (current->data->name == animal->name)
+      {
+        temp = current;
+        free(temp);
+      }
+      current = current->next;
+    }
+
+    caravan->length--;
+
+    //maybe delete
+    caravan->loadC -= animal->load;
+  }
+  else
+  {
+    caravan->empty = true;
+  }
 }
 
 int get_caravan_load(Caravan caravan)
 {
-  return 0;
+  return caravan->loadC;
 }
 
 void unload(Caravan caravan)
 {
+  struct Node *current = (struct Node *)malloc(sizeof(struct Node));
+
+  caravan->loadC = 0;
+
+  while (current->data->load != '\0')
+  {
+    current->data->load = 0;
+    current->data->load = current->next->data->load;
+  }
 }
 
 int get_caravan_speed(Caravan caravan)
 {
-  return 0;
+  struct Node *current = (struct Node *)malloc(sizeof(struct Node));
+  int caravanSpeed = current->data->max_speed;
+
+  while (current != 0)
+  {
+    if (current->data->max_speed <= current->next->data->max_speed)
+    {
+      caravanSpeed = current->data->max_speed;
+    }
+
+    current->data = current->next->data;
+  }
+
+  return caravanSpeed;
 }
+
+/*void optimize_load(Caravan caravan)
+{
+
+}*/

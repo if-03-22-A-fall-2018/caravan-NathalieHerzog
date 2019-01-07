@@ -4,7 +4,7 @@
  * Exercise Number: #exercise_number#
  * File:			caravan.c
  * Author(s):		Nathalie Herzog
- * Due Date:		#due#
+ * Due Date:		8th January, 2019
  *-----------------------------------------------------------------------------
  * Description:
  * <your description here>
@@ -36,13 +36,11 @@ int get_length(Caravan caravan)
 
 void delete_caravan(Caravan caravan)
 {
-  int length = get_length(caravan);
-
-  for (int i = 0; i < length; i++)
+  for (int i = 0; i < caravan->length; i++)
   {
-    head = caravan->head;
-    caravan->head = head->next;
-    sfree(head);
+    Node *temp = caravan->head;
+    caravan->head = temp->next;
+    sfree(temp);
   }
 
   sfree(caravan);
@@ -50,7 +48,7 @@ void delete_caravan(Caravan caravan)
 
 void add_pack_animal(Caravan caravan, PackAnimal animal)
 {
-  if((animal == 0) || (animal->caravan == caravan))
+  if ((animal == 0) || (animal->caravan == caravan))
   {
     return;
   }
@@ -70,8 +68,9 @@ void add_pack_animal(Caravan caravan, PackAnimal animal)
 void remove_pack_animal(Caravan caravan, PackAnimal animal)
 {
   struct Node *current = caravan->head;
+  struct Node *temp = current->next;
 
-  if((animal == 0) || (current == 0))
+  if ((animal == 0) || (current == 0))
   {
     return;
   }
@@ -85,17 +84,17 @@ void remove_pack_animal(Caravan caravan, PackAnimal animal)
     return;
   }
 
-  while((current->next != 0) && (current->next->data != animal)){
+  while ((current->next != 0) && (current->next->data != animal))
+  {
     current = current->next;
   }
 
-  if(current->next == 0){
+  if (current->next == 0)
+  {
     return;
   }
-
-  Node* node_next = current->next;
-  current->next = node_next->next;
-  sfree(node_next);
+  current->next = temp->next;
+  sfree(temp);
 
   caravan->length--;
   caravan->loadC -= animal->load;
@@ -110,11 +109,11 @@ void unload(Caravan caravan)
 {
   int length = get_length(caravan);
 
-  Node* current = caravan->head;
+  Node *current = caravan->head;
 
   caravan->loadC = 0;
 
-  for(int i = 0; i < length; i++)
+  for (int i = 0; i < length; i++)
   {
     current->data->load = 0;
     current = current->next;

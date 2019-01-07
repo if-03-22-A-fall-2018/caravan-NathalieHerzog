@@ -19,7 +19,7 @@ struct CaravanImplementation
 {
     int length;
     int loadC;
-    bool empty;
+    struct Node *head;
 };
 
 struct Node

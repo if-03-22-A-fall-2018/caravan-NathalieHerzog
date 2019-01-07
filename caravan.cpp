@@ -15,6 +15,7 @@
 #include "pack_animal.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "general.h"
 
 struct Node *head;
 
@@ -24,7 +25,6 @@ Caravan new_caravan()
 
   caravan->length = 0;
   caravan->loadC = 0;
-  caravan->empty = true;
 
   return caravan;
 }
@@ -36,59 +36,69 @@ int get_length(Caravan caravan)
 
 void delete_caravan(Caravan caravan)
 {
-  free(caravan);
+  int length = get_length(caravan);
+
+  for (int i = 0; i < length; i++)
+  {
+    head = caravan->head;
+    caravan->head = head->next;
+    sfree(head);
+  }
+
+  sfree(caravan);
 }
 
 void add_pack_animal(Caravan caravan, PackAnimal animal)
 {
-  if (head != NULL)
+  if((animal == 0) || (animal->caravan == caravan))
   {
-    struct Node *current = (struct Node *)malloc(sizeof(struct Node));
-
-    current = head;
-
-    while (current->next != NULL)
-    {
-      current = current->next;
-    }
-
-    current->next = (struct Node *)malloc(sizeof(struct Node));
-    current->next->data = animal;
-
-    caravan->length++;
-    caravan->loadC += animal->load;
-    animal->caravan = caravan;
+    return;
   }
+
+  struct Node *current = (struct Node *)malloc(sizeof(struct Node));
+
+  animal->caravan = caravan;
+
+  current->data = animal;
+  current->next = caravan->head;
+  caravan->head = current;
+
+  caravan->length++;
+  caravan->loadC += animal->load;
 }
 
 void remove_pack_animal(Caravan caravan, PackAnimal animal)
 {
-  if (head != NULL)
+  struct Node *current = caravan->head;
+
+  if((animal == 0) || (current == 0))
   {
-    struct Node *current = (struct Node *)malloc(sizeof(struct Node));
-    struct Node *temp;
-
-    current = head;
-
-    while (current != NULL)
-    {
-      if (current->data->name == animal->name)
-      {
-        temp = current;
-        free(temp);
-      }
-      current = current->next;
-    }
-
-    caravan->length--;
-
-    //maybe delete
-    caravan->loadC -= animal->load;
+    return;
   }
-  else
+
+  animal->caravan = 0;
+
+  if (current->data == animal)
   {
-    caravan->empty = true;
+    caravan->head = current->next;
+    sfree(current);
+    return;
   }
+
+  while((current->next != 0) && (current->next->data != animal)){
+    current = current->next;
+  }
+
+  if(current->next == 0){
+    return;
+  }
+
+  Node* node_next = current->next;
+  current->next = node_next->next;
+  sfree(node_next);
+
+  caravan->length--;
+  caravan->loadC -= animal->load;
 }
 
 int get_caravan_load(Caravan caravan)
@@ -98,14 +108,16 @@ int get_caravan_load(Caravan caravan)
 
 void unload(Caravan caravan)
 {
-  struct Node *current = (struct Node *)malloc(sizeof(struct Node));
+  int length = get_length(caravan);
+
+  Node* current = caravan->head;
 
   caravan->loadC = 0;
 
-  while (current->data->load != '\0')
+  for(int i = 0; i < length; i++)
   {
     current->data->load = 0;
-    current->data->load = current->next->data->load;
+    current = current->next;
   }
 }
 

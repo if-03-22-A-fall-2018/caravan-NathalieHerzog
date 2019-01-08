@@ -77,7 +77,6 @@ void add_pack_animal(Caravan caravan, PackAnimal animal)
 void remove_pack_animal(Caravan caravan, PackAnimal animal)
 {
   struct Node *current = caravan->head;
-  struct Node *temp = current->next;
 
   if ((animal == 0) || (current == 0))
   {
@@ -107,6 +106,7 @@ void remove_pack_animal(Caravan caravan, PackAnimal animal)
     return;
   }
 
+  struct Node *temp = current->next;
   current->next = temp->next;
   sfree(temp);
 

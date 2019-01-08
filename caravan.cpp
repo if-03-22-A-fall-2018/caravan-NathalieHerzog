@@ -23,6 +23,7 @@ Caravan new_caravan()
 {
   Caravan caravan = (Caravan)malloc(sizeof(caravan));
 
+  caravan->head = 0;
   caravan->length = 0;
   caravan->loadC = 0;
 
@@ -36,9 +37,11 @@ int get_length(Caravan caravan)
 
 void delete_caravan(Caravan caravan)
 {
+  Node *temp;
+
   for (int i = 0; i < caravan->length; i++)
   {
-    Node *temp = caravan->head;
+    temp = caravan->head;
     caravan->head = temp->next;
     sfree(temp);
   }
@@ -51,6 +54,12 @@ void add_pack_animal(Caravan caravan, PackAnimal animal)
   if ((animal == 0) || (animal->caravan == caravan))
   {
     return;
+  }
+
+  if(animal->caravan != 0)
+  {
+    remove_pack_animal(get_caravan(animal), animal);
+
   }
 
   struct Node *current = (struct Node *)malloc(sizeof(struct Node));
@@ -75,12 +84,16 @@ void remove_pack_animal(Caravan caravan, PackAnimal animal)
     return;
   }
 
-  animal->caravan = 0;
-
   if (current->data == animal)
   {
     caravan->head = current->next;
     sfree(current);
+
+    caravan->length--;
+    caravan->loadC -= animal->load;
+
+    animal->caravan = 0;
+
     return;
   }
 
@@ -93,11 +106,13 @@ void remove_pack_animal(Caravan caravan, PackAnimal animal)
   {
     return;
   }
+
   current->next = temp->next;
   sfree(temp);
 
   caravan->length--;
   caravan->loadC -= animal->load;
+  animal->caravan = 0;
 }
 
 int get_caravan_load(Caravan caravan)
@@ -122,17 +137,17 @@ void unload(Caravan caravan)
 
 int get_caravan_speed(Caravan caravan)
 {
-  struct Node *current = (struct Node *)malloc(sizeof(struct Node));
-  int caravanSpeed = current->data->max_speed;
+  struct Node *current = caravan->head;
+  int caravanSpeed = 50;
 
-  while (current != 0)
+  while(current != 0)
   {
-    if (current->data->max_speed <= current->next->data->max_speed)
+    if (get_actual_speed(current->data) < caravanSpeed)
     {
-      caravanSpeed = current->data->max_speed;
+      caravanSpeed = get_actual_speed(current->data);
     }
 
-    current->data = current->next->data;
+    current = current->next;
   }
 
   return caravanSpeed;
